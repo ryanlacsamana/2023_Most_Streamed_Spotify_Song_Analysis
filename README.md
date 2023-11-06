@@ -44,3 +44,38 @@ speechiness_%   |amount of spoken words in the song|
 - instrumentalness_% - The closer the instrumentalness values is to 100, the greater likelihood the track contains no vocal content (ooh and aah sounds are treated as instrumental). Values above 50 are intended to represent instrumental tracks.
 - liveness_% - higher liveness values represent an increased probability that the track is performed live. A value above 80 provides strong likelihood that the track is live.
 - speechiness_% - Values above 66 describe tracks that are probably made entirely of spoken words. Values between 33 and 66 describe tracks that may contain both music and speech, including rap music.
+
+### **1.1 Objectives**
+
+1. Clean the data.
+2. Identify relationship between variables.
+3. Identify how the track metrics (danceability, energy, valence, acousticness, instrumentalness, liveness, and speechiness) relates to the number of streams, chart placement, and frequency in playlist of a certain track.
+4. Share insights and findings through visualization and observations.
+
+### **1.2 Methodology**
+
+1. Create additional columns as necessary and modify values from certain columns to ease the analysis.
+2. Check for null values and incorrect datatypes. Apply necessary measures to remove or replace these values.
+3. Explore the data
+4. Plot relationship between variables using visualization tools available in Seaborn and Matplotlib.
+5. Write an observation based on the results of the analysis.
+```
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import seaborn as sns
+import seaborn.objects as so
+
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+```
+```
+df = pd.read_csv("D:\Documents\CSV Datasets\Spotify Songs\spotify-2023.csv", encoding='latin-1')
+```
+
+### **3. Data Preprocessing and Data Cleaning**
+
+```
+df.head(10)
+```
