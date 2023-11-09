@@ -355,6 +355,7 @@ df.head(10)
 ```
 df.info()
 ```
+<table>
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 953 entries, 0 to 952
 Data columns (total 24 columns):
@@ -386,4 +387,5 @@ Data columns (total 24 columns):
  23  speechiness_%         953 non-null    int64 
 dtypes: int64(17), object(7)
 memory usage: 178.8+ KB
+</table>
 
