@@ -552,7 +552,6 @@ for col_chart in ['in_spotify_charts','in_apple_charts','in_deezer_charts','in_s
 ```
 df.head()
 ```
-```
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -705,7 +704,7 @@ df.head()
 </table>
 <p>5 rows × 28 columns</p>
 </div>
-```
+
 ```
 df.info()
 ```
@@ -752,20 +751,6 @@ memory usage: 215.7+ KB
 ```
 df.describe()
 ```
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1203,6 +1188,145 @@ plt.show()
 ```
 
 ![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/7b0deec3-67b8-4da1-9594-fb7dca61a4a7)
+
+```
+## Plot a scatterplot to visualize the spread of variables and its relationship to the stream count
+plt.figure(figsize=(25,20))
+
+int_no_stream = [col for col in df_int.columns
+                   if col != 'streams']
+
+for i, col in enumerate(int_no_stream):
+    plt.subplot(5,4, i+1)
+    sns.scatterplot(data=df_int, x=col, y='streams')
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/8fbf610f-e53a-4f2c-8c76-9d1fab59df51)
+
+```
+## Create a boxplot for total stream duration vs chart placement category
+fig, ax = plt.subplots(1,4, figsize=(20,5))
+
+sns.set(font_scale = 0.9)
+custom_order = ['Uncharted','Top 10','Top 50','Top 100','Top 200','Charted']
+
+## For Spotify charts
+sns.boxplot(data=df, x='streams', y='in_spotify_charts_category', order=custom_order, palette=sns.color_palette('hls'), width=0.3, fliersize=2, ax=ax[0])
+ax[0].legend([])
+ax[0].set_xlabel(xlabel='total stream duration')
+## For Apple charts
+sns.boxplot(data=df, x='streams', y='in_apple_charts_category', order=custom_order, palette=sns.color_palette('hls'), width=0.3, fliersize=2, ax=ax[1])
+ax[1].legend([])
+ax[1].set_xlabel(xlabel='total stream duration')
+## For Deezer charts
+sns.boxplot(data=df, x='streams', y='in_deezer_charts_category', order=custom_order, palette=sns.color_palette('hls'), width=0.3, fliersize=2, ax=ax[2])
+ax[2].legend([])
+ax[2].set_xlabel(xlabel='total stream duration')
+## For Shazam charts
+sns.boxplot(data=df, x='streams', y='in_shazam_charts_category', order=custom_order, palette=sns.color_palette('hls'), width=0.3, fliersize=2, ax=ax[3])
+ax[3].legend([])
+ax[3].set_xlabel(xlabel='total stream duration')
+
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/5c9808a5-7fd1-4eb9-9a8a-751d21c46c23)
+
+#### 4.2.1 Observations
+
+**1. Artist Count**
+   - Tracks with only 1 artist seem to be more popular and streamed more.
+  
+**2. Year of Release**
+   - Newer songs tend to be streamed more, as shown in both the histogram and scatterplot, but older songs that dates back up to 1930 received a lot of streaming too.
+   - The older songs that received a lot of streaming could be classic songs, or songs that were brought back to popularity due to some usage in social media.
+
+**3. Presence in Platform Playlists**
+   - The histogram for `in_spotify_playlists`, `in_apple_playlists`, and `in_deezer_playlists` are all skewed to the left. The scatterplot for these columns also shows that huge number of tracks populate the lower values. This means that most of the top streamed songs are not included in the subscriber's playlist.
+   - These findings, combined with the findings for the `released_year` column could mean that these top streamed songs are new songs, which typically receives a lot of streaming, or which have not yet been added to most playlist. This could also mean that the number of streaming a track receives does not necessarily mean a subscriber will like them.
+
+**4. Presence in Platform Charts**
+   - The histogram for `in_spotify_charts`, `in_apple_charts`, `in_deezer_charts`, and `in_shazam_charts` are also skewed to the left. However, since the values for the charts indicate that the lower numbers indicate a higher placement in the charts, or a value of zero means that a track does not place in a chart, the histograms and scatterplots are not enough to visualize the relationship, hence, the creation of new columns for chart classification.
+   - There are top streamed songs that did not place in a chart for both Spotify and Deezer.
+   - Uncharted tracks have shorter total streaming duration for Spotify, Deezer, and Shazam, however, the tracks that placed in the Top 10 charts have the shortest total streaming duration in Apple.
+   - The tracks in Spotify that placed within the top 101 to 200 in Spotify received a largely varying streaming time, having both tracks that has the one of the lowest and the highest streaming duration, and the highest interquartile range.
+
+**5. BPM**
+   - The BPM with the most streamed music is 120, with 90 BPM follows closely. Tracks with high BPM values have few number of streams.
+   - Listeners prefer to stream music with moderate speed.
+
+**6. Key**
+   - There are no streamed music with the key 0 (C).
+   - The music key with the most streams is 1 (C#), while the least is 3 (D#).
+   - The amount of streams for the other keys have small variations.
+
+**7. Track Metrics**
+   - **7.1 Danceability**
+     - Listeners stream more to danceable tracks, as shown in the histogram with the highest amount of streams in 70%.
+   - **7.2 Valence**
+     - The highest amount of stream is at the 50% valence. The number of tracks and amount of streams seem to vary only in small amounts as the valence value increases or decreases from 50%.
+     - This findings could mean that the mood of the top streamed songs is neutral, as it includes songs from different types of moods.
+   - **7.3 Energy**
+     - The most number of streams are also at the 70% energy value. This could be related to listeners preference to danceable tracks.
+   - **7.4 Acousticness**
+     - The histogram shows a left-skewed plot, which means that a considerable amount of top streamed songs are not acoustic.
+     - In the scatterplot, however, the findings seem to be not biased to non-acoustic songs, as some points still populate the chart in the higher acoustic levels, with the most time of streaming present in the higher levels.
+     - Based on this findings, tracks that are partially acoustic gain more listening time compared to non-acoustic tracks. It is only the large amount of non-acoustic tracks that contribute to the large amount of streaming time.
+   - **7.5 Instrumentalness**
+     - The histogram and scatterplot both show that listeners prefer to listen to tracks that have both music and singing, as the plot is skewed to the left and populates in the lowest values of instrumentalness.
+   - **7.6 Liveness**
+     - The histogram and scatterplot both show that listeners prefer to listen to recorded tracks, as the plot is skewed to the left and populates in the lower values of liveness.
+   - **7.7 Speechiness**
+     - The histogram and scatterplot both show that listeners prefer to listen to tracks with more singing than speech.
+    
+### 4.3 Correlation Matrix
+
+After checking the histograms, scatterplots, and boxplots for the relationship between variables and stream count, we will plot a heatmap correlating variables that could have high correlation to the number of streams.
+
+```
+## Plot a correlation matrix
+col_to_corr = ['artist_count','released_year','in_spotify_playlists','in_spotify_charts','streams','in_apple_playlists','in_apple_charts','in_deezer_playlists','in_deezer_charts',
+               'in_shazam_charts','danceability_%','valence_%','energy_%','acousticness_%','instrumentalness_%','liveness_%','speechiness_%']
+
+corr_matrix = df_int[col_to_corr].corr()
+mask = np.triu(corr_matrix, k=1)
+mask = mask | (corr_matrix >= 0.5)
+
+plt.figure(figsize=(12,10))
+sns.heatmap(corr_matrix, annot=True, fmt='.2f', square=True, mask=~mask, cmap='coolwarm')
+sns.set(font_scale=0.7)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/474915c7-66cf-4a5a-8126-425359addc50)
+
+Based on the correlation heatmap, the values in the columns `in_spotify_playlists` and `in_apple_playlists` have high correlation to the number of streams, with correlation values more than 0.70. Values in the `in_deezer_playlists` have a moderate to good correlation to the number of streams with a value of more than 0.50.
+
+### 4.4 Analysis of the Distribution of Track Metrics per Year of Release
+
+#### **4.4.1 Danceability**
+
+```
+## Create a boxplot
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='danceability_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45, fontsize=8)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/1cc29687-e9d0-4087-8766-7b8521f95e6b)
+
+- Tracks that are released from the year 2020 to 2023 have almost similar median danceability, and almost similar interquartile range.
+- Tracks that are released from 2008 to 2023 have wide range of danceability. It could be due to the majority of the top tracks were released in these years.
+- The most danceable track in the top streamed songs was released in 2021.
+- The least danceable track in the top streamed songs was released in 1942.
 
 
 
