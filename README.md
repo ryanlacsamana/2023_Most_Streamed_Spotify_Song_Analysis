@@ -1489,15 +1489,181 @@ for i, (platform1, platform2) in enumerate(platforms_chart_comb):
 
 ![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/54a523db-7b1c-43c7-ae63-8a663782ea1f)
 
-Correlation between Spotify and Apple: 0.55
-Correlation between Spotify and Deezer: 0.60
-Correlation between Spotify and Shazam: 0.57
-Correlation between Apple and Deezer: 0.38
-Correlation between Apple and Shazam: 0.40
-Correlation between Deezer and Shazam: 0.40
+- Correlation between Spotify and Apple: 0.55
+- Correlation between Spotify and Deezer: 0.60
+- Correlation between Spotify and Shazam: 0.57
+- Correlation between Apple and Deezer: 0.38
+- Correlation between Apple and Shazam: 0.40
+- Correlation between Deezer and Shazam: 0.40
 
 - The charts above show that top streamed tracks for different platform varies, as the number of tracks that are both present or not present on either platform have varying results for different combinations, with almost considerable amount of tracks that are not present in both platforms.
 - The correlation also shows a moderate to low correlation between these variables.
+
+#### **4.5.2 Based on Platform Playlists**
+
+```
+## Plot a count plot to visualize the number of tracks present or not present in the charts of both platforms
+
+fig, ax = plt.subplots(1,3, figsize=(10,3))
+
+## For tracks in both Spotify and Apple playlists
+df['both_spotify_apple_playlists'] = (df['in_spotify_playlists'] > 0) & (df['in_apple_playlists'] > 0)
+sns.countplot(data=df, x='both_spotify_apple_playlists', width=0.4, ax=ax[0])
+ax[0].set_xticklabels(['Not in both','Present in both'])
+ax[0].set_xlabel(xlabel='Both in Spotify and Apple Playlists')
+
+## For tracks in both Spotify and Deezer playlists
+df['both_spotify_deezer_playlists'] = (df['in_spotify_playlists'] > 0) & (df['in_deezer_playlists'] > 0)
+sns.countplot(data=df, x='both_spotify_deezer_playlists', width=0.4, ax=ax[1])
+ax[1].set_xticklabels(['Not in both','Present in both'])
+ax[1].set_xlabel(xlabel='Both in Spotify and Deezer Playlists')
+
+## For tracks in both Apple and Deezer charts
+df['both_apple_deezer_playlists'] = (df['in_apple_playlists'] > 0) & (df['in_deezer_playlists'] > 0)
+sns.countplot(data=df, x='both_apple_deezer_charts', width=0.4, ax=ax[2])
+ax[2].set_xticklabels(['Not in both','Present in both'])
+ax[2].set_xlabel(xlabel='Both in Apple and Deezer')
+
+plt.tight_layout()
+plt.show()
+
+## Determine the correlation values between two platforms
+platforms_playlist = ['Spotify','Apple','Deezer']
+platforms_playlist_comb = [(platforms_playlist[i], platforms_playlist[j]) for i in range(3) for j in range(i + 1, 3)]
+
+for i, (platform1, platform2) in enumerate(platforms_playlist_comb):
+    col1 = f'in_{platform1.lower()}_charts'
+    col2 = f'in_{platform2.lower()}_charts'
+    
+    platform_corr = df[col1].corr(df[col2]) 
+    
+    print(f'Correlation between {platform1} and {platform2}: {platform_corr:.2f}')
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/be51946d-b63f-47dc-864c-9c88779a0f86)
+
+- Correlation between Spotify and Apple: 0.55
+- Correlation between Spotify and Deezer: 0.60
+- Correlation between Apple and Deezer: 0.38
+
+- Majority of songs in the top streamed tracks that are present in Spotify playlists are also present in Apple and Deezer playlists.
+- The chart results is backed by a moderate correlation score for Spotify and Apple playlists (0.55) and Spotify and Deezer playlists (0.60).
+
+### 4.6 Chart Performance based on Track Metrics
+
+#### **4.6.1 Danceability**
+
+```
+platforms = ['Spotify','Apple','Deezer','Shazam']
+
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, y=f'in_{platform.lower()}_charts_category', x='danceability_%', order=custom_order, ax=axes[i], orient='h', width=0.4, palette=sns.color_palette('hls'))
+
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/0b975ce2-a0b3-4fa1-b770-b735477ac212)
+
+#### **4.6.2 Valence**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='valence_%', y=f'in_{platform.lower()}_charts_category', order=custom_order, ax=axes[i], palette=sns.color_palette('hls'), width=0.4)
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/f585a156-67a7-48c1-bdd0-4751c4c9a064)
+
+#### **4.6.3 Energy**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='energy_%', y=f'in_{platform.lower()}_charts_category', order=custom_order, ax=axes[i], palette=sns.color_palette('hls'), width=0.4)
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/575b7931-4b90-4e62-9242-fe6c4612b917)
+
+#### **4.6.4 Acousticness**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='acousticness_%', y=f'in_{platform.lower()}_charts_category', ax=axes[i], order=custom_order, width=0.4, palette=sns.color_palette('hls'))
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/881b6ee8-40e8-4f29-8f51-e4c9907e147d)
+
+#### **4.6.5 Instrumentalness**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='instrumentalness_%', y=f'in_{platform.lower()}_charts_category', width=0.4, palette=sns.color_palette('hls'), order=custom_order, ax=axes[i])
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/8cd4ff3a-af2a-4218-a82e-f5ab844c705c)
+
+#### **4.6.6 Liveness**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='liveness_%', y=f'in_{platform.lower()}_charts_category', order=custom_order, width=0.4, palette=sns.color_palette('hls'), ax=axes[i])
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/b25c7696-aac5-4773-a5ed-4e1db0b7bbe7)
+
+#### **4.6.7 Speechiness**
+
+```
+fig, axes = plt.subplots(1,4, figsize=(16,3))
+
+for i, platform in enumerate(platforms):
+    sns.boxplot(data=df, x='speechiness_%', y=f'in_{platform.lower()}_charts_category', width=0.4, order=custom_order, palette=sns.color_palette('hls'), ax=axes[i])
+    
+plt.tight_layout()
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/ffc572ed-0f15-476a-862c-c849ca0ced8d)
+
+### **5. Conclusion**
+
+1. Most tracks that made it to the top streamed tracks did not place in charts. These tracks also have shorter streaming time compared to tracks that placed in the charts. These comprises of new tracks that haven't placed in a chart yet, but typically streamed more due to being recent.
+2. Similar to the observation in number 1, most top streamed tracks are not present in many playlists in all platforms. These could be because these tracks are recent and typically streamed more, and not yet been added to any playlist.
+3. The top streamed tracks consists a fair amount of upbeat tracks, but the mood of these songs varies widely.
+4. Listeners prefer to stream tracks that consists more singing than speech, acoustics, and instrumentals.
+5. The track's release date greatly contributes to the track's total stream time, with tracks that are released recently have more streaming time compared to older tracks.
+6. The track's BPM and key are almost a non-factor in a track's total stream time.
+7. With all the observations above, the dataset does not show many highly correlated variables. The variables in this dataset is not enough to predict whether a track will receive a long streaming time or not. Digging deeper into the historical records of many tracks could result a better correlation between variables.
+
+
+
+
 
 
 
