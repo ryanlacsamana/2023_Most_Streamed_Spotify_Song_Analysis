@@ -1,4 +1,4 @@
-## **Most Streamed Spotify Songs 2023**
+## **Analysis on the Most Streamed Spotify Songs 2023**
 
 ### **1. Introduction**
 
@@ -1327,6 +1327,183 @@ plt.show()
 - Tracks that are released from 2008 to 2023 have wide range of danceability. It could be due to the majority of the top tracks were released in these years.
 - The most danceable track in the top streamed songs was released in 2021.
 - The least danceable track in the top streamed songs was released in 1942.
+
+#### **4.4.2 Valence**
+```
+## Create a boxplot
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='valence_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45, fontsize=8)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/5b9f2cf5-da3f-47c1-aa96-aba287d0ed89)
+
+- Tracks from 2020 to 2023 shows wide variety of moods in the top streamed songs, long whiskers extending from low valence to high valence, and median values at approximately 50%.
+- Tracks from 2011 to 2023 has median valence at approximately 40 to 50%, with the exception of 2018. The range is also at the middle of the chart, ranging 20 to 70%, which shows the neutrality of the mood in the top streamed songs.
+
+#### **4.4.3 Energy**
+
+```
+## Create a boxplot
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='energy_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45, fontsize=8)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/23e8ab61-8996-4e0e-b86a-c5c8db8cdbdf)
+
+- Top tracks from 2011 to 2023 contains a wide range of tracks from energetic to less energetic, but with median values at the 50 to 60% energy percentage.
+- The median values of the most streamed tracks are 50% or more, with the exception of 1958, 1959, and years with single tracks that made it to the most streamed. This shows that listeners prefer to listen to energetic tracks.
+
+#### **4.4.4 Acousticness**
+
+```
+## Create a boxplot
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='acousticness_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45, fontsize=8)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/2833802d-2069-4f2c-a59f-29c5c61b2f4a)
+
+- Tracks from 2011 to 2023 contains high variety of songs with different acousticness values, as shown in the long whiskers and long interquartile range.
+- Older tracks seem to fall under a small range of acousticness levels.
+
+#### **4.4.5 Instrumentalness**
+
+```
+## Create a boxplot
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='instrumentalness_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45, fontsize=8)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/4c9ff67e-a8f0-4c84-bbb1-06989ec3ae1c)
+
+- The boxplot shows that majority of the most streamed tracks contains less instrumentalness levels, with some tracks that falls under the instrumental category identifies as outliers.
+- Tracks released from 1986, 1991, and 2015, however, contains tracks that have considerably high instrumentalness levels, especially in 2015 where the boxplot whiskers reached the highest instrumentalness level.
+
+#### **4.4.6 Liveness**
+
+```
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='liveness_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/5c671232-27ae-43f8-9f59-04a0dcd8d83d)
+
+- A huge number of top streamed tracks have values of less than 50% liveness, with whiskers and interquartile range falling below 50%.
+- Tracks which are performed live fall to the outliers, which means than listeners prefer to listen to recorded tracks.
+
+#### **4.4.7 Speechiness**
+
+```
+plt.subplots(1,1, figsize=(15,3))
+
+sns.boxplot(data=df, x='released_year', y='speechiness_%', width=0.4, fliersize=2)
+plt.xticks(rotation=45)
+
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/fc9360c1-eb9d-4daa-9600-841dd652b4da)
+
+- Listeners prefer to listen to tracks with less speechiness or spoken words, as shown in the boxplot, where ticks and interquartile range fall below 30 to 40%, and outliers are seldom be seen above 50%.
+
+### 4.5 Distribution of Top Streamed Tracks in other Platforms
+
+#### **4.5.1 Based on Platform Charts**
+
+```
+## Plot a count plot to visualize the number of tracks present or not present in the charts of both platforms
+
+fig, axes = plt.subplots(2,3, figsize=(10,6))
+
+## For tracks in both Spotify and Apple charts
+df['both_spotify_apple_charts'] = (df['in_spotify_charts'] > 0) & (df['in_apple_charts'] > 0)
+sns.countplot(data=df, x='both_spotify_apple_charts', width=0.4, ax=axes[0,0])
+axes[0,0].set_xticklabels(['Not in both','Present in both'])
+axes[0,0].set_xlabel(xlabel='Both in Spotify and Apple Charts')
+
+## For tracks in both Spotify and Deezer charts
+df['both_spotify_deezer_charts'] = (df['in_spotify_charts'] > 0) & (df['in_deezer_charts'] > 0)
+sns.countplot(data=df, x='both_spotify_deezer_charts', width=0.4, ax=axes[0,1])
+axes[0,1].set_xticklabels(['Not in both','Present in both'])
+axes[0,1].set_xlabel(xlabel='Both in Spotify and Deezer Charts')
+
+## For tracks in both Spotify and Shazam charts
+df['both_spotify_shazam_charts'] = (df['in_spotify_charts'] > 0) & (df['in_shazam_charts'] > 0)
+sns.countplot(data=df, x='both_spotify_shazam_charts', width=0.4, ax=axes[0,2])
+axes[0,2].set_xticklabels(['Not in both','Present in both'])
+axes[0,2].set_xlabel(xlabel='Both in Spotify and Shazam Charts')
+
+## For tracks in both Apple and Deezer charts
+df['both_apple_deezer_charts'] = (df['in_apple_charts'] > 0) & (df['in_deezer_charts'] > 0)
+sns.countplot(data=df, x='both_apple_deezer_charts', width=0.4, ax=axes[1,0])
+axes[1,0].set_xticklabels(['Not in both','Present in both'])
+axes[1,0].set_xlabel(xlabel='Both in Apple and Deezer Charts')
+
+## For tracks in both Apple and Shazam charts
+df['both_apple_shazam_charts'] = (df['in_apple_charts'] > 0) & (df['in_shazam_charts'] > 0)
+sns.countplot(data=df, x='both_apple_shazam_charts', width=0.4, ax=axes[1,1])
+axes[1,1].set_xticklabels(['Not in both','Present in both'])
+axes[1,1].set_xlabel(xlabel='Both in Apple and Shazam Charts')
+
+## For tracks in both Deezer and Shazam charts
+df['both_deezer_shazam_charts'] = (df['in_deezer_charts'] > 0) & (df['in_shazam_charts'] > 0)
+sns.countplot(data=df, x='both_deezer_shazam_charts', width=0.4, ax=axes[1,2])
+axes[1,2].set_xticklabels(['Not in both','Present in both'])
+axes[1,2].set_xlabel(xlabel='Both in Deezer and Shazam Charts')
+
+plt.tight_layout()
+plt.show()
+
+## Determine the correlation values between two platforms
+platforms_chart = ['Spotify','Apple','Deezer','Shazam']
+platforms_chart_comb = [(platforms_chart[i], platforms_chart[j]) for i in range(3) for j in range(i + 1, 4)]
+
+for i, (platform1, platform2) in enumerate(platforms_chart_comb):
+    col1 = f'in_{platform1.lower()}_charts'
+    col2 = f'in_{platform2.lower()}_charts'
+    
+    platform_corr = df[col1].corr(df[col2]) 
+    
+    print(f'Correlation between {platform1} and {platform2}: {platform_corr:.2f}')
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/54a523db-7b1c-43c7-ae63-8a663782ea1f)
+
+Correlation between Spotify and Apple: 0.55
+Correlation between Spotify and Deezer: 0.60
+Correlation between Spotify and Shazam: 0.57
+Correlation between Apple and Deezer: 0.38
+Correlation between Apple and Shazam: 0.40
+Correlation between Deezer and Shazam: 0.40
+
+- The charts above show that top streamed tracks for different platform varies, as the number of tracks that are both present or not present on either platform have varying results for different combinations, with almost considerable amount of tracks that are not present in both platforms.
+- The correlation also shows a moderate to low correlation between these variables.
+
+
+
+
+
+
 
 
 
