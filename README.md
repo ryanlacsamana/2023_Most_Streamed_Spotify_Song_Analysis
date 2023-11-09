@@ -503,6 +503,516 @@ liveness_%              0
 speechiness_%           0
 dtype: int64
 ```
+```
+## Remove the comma (,) for some values in columns 'in_deezer_playlists' and 'in_shazam_charts' and convert them into int64
+df['in_deezer_playlists'] = df['in_deezer_playlists'].replace(',', '', regex=True).astype('int64')
+df['in_shazam_charts'] = df['in_shazam_charts'].replace(',', '', regex=True).astype('int64')
 
+## Change the datatype of 'streams' column into int64
+df['streams'] = df['streams'].astype('int64')
+```
+```
+## Change values in 'key' column into integers using Pitch Class Notation
+pitch_class = {'C': 0,
+               'C#': 1,
+               'D': 2,
+               'D#': 3,
+               'E': 4,
+               'F': 5,
+               'F#': 6,
+               'G': 7,
+               'G#': 8,
+               'A': 9,
+               'A#': 10,
+               'B': 11
+               }
+
+df['key'] = df['key'].map(pitch_class).fillna(-1)
+```
+```
+## Create new columns for track's chart classification
+def chart_cat(value):
+    if value == 0:
+        return 'Uncharted'
+    elif 1 <= value <= 10:
+        return 'Top 10'
+    elif 11 <= value <= 50:
+        return 'Top 50'
+    elif 51 <= value <= 100:
+        return 'Top 100'
+    elif 101 <= value <= 200:
+        return 'Top 200'
+    else:
+        return 'Charted'
+    
+for col_chart in ['in_spotify_charts','in_apple_charts','in_deezer_charts','in_shazam_charts']:
+    new_col_chart_name = col_chart + '_category'
+    df[new_col_chart_name] = df[col_chart].apply(chart_cat)
+```
+```
+df.head()
+```
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>track_name</th>
+      <th>artist(s)_name</th>
+      <th>artist_count</th>
+      <th>released_year</th>
+      <th>released_month</th>
+      <th>released_day</th>
+      <th>in_spotify_playlists</th>
+      <th>in_spotify_charts</th>
+      <th>streams</th>
+      <th>in_apple_playlists</th>
+      <th>...</th>
+      <th>valence_%</th>
+      <th>energy_%</th>
+      <th>acousticness_%</th>
+      <th>instrumentalness_%</th>
+      <th>liveness_%</th>
+      <th>speechiness_%</th>
+      <th>in_spotify_charts_category</th>
+      <th>in_apple_charts_category</th>
+      <th>in_deezer_charts_category</th>
+      <th>in_shazam_charts_category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Seven (feat. Latto) (Explicit Ver.)</td>
+      <td>Latto, Jung Kook</td>
+      <td>2</td>
+      <td>2023</td>
+      <td>7</td>
+      <td>14</td>
+      <td>553</td>
+      <td>147</td>
+      <td>141381703</td>
+      <td>43</td>
+      <td>...</td>
+      <td>89</td>
+      <td>83</td>
+      <td>31</td>
+      <td>0</td>
+      <td>8</td>
+      <td>4</td>
+      <td>Top 200</td>
+      <td>Charted</td>
+      <td>Top 10</td>
+      <td>Charted</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>LALA</td>
+      <td>Myke Towers</td>
+      <td>1</td>
+      <td>2023</td>
+      <td>3</td>
+      <td>23</td>
+      <td>1474</td>
+      <td>48</td>
+      <td>133716286</td>
+      <td>48</td>
+      <td>...</td>
+      <td>61</td>
+      <td>74</td>
+      <td>7</td>
+      <td>0</td>
+      <td>10</td>
+      <td>4</td>
+      <td>Top 50</td>
+      <td>Top 200</td>
+      <td>Top 50</td>
+      <td>Charted</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>vampire</td>
+      <td>Olivia Rodrigo</td>
+      <td>1</td>
+      <td>2023</td>
+      <td>6</td>
+      <td>30</td>
+      <td>1397</td>
+      <td>113</td>
+      <td>140003974</td>
+      <td>94</td>
+      <td>...</td>
+      <td>32</td>
+      <td>53</td>
+      <td>17</td>
+      <td>0</td>
+      <td>31</td>
+      <td>6</td>
+      <td>Top 200</td>
+      <td>Charted</td>
+      <td>Top 50</td>
+      <td>Charted</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cruel Summer</td>
+      <td>Taylor Swift</td>
+      <td>1</td>
+      <td>2019</td>
+      <td>8</td>
+      <td>23</td>
+      <td>7858</td>
+      <td>100</td>
+      <td>800840817</td>
+      <td>116</td>
+      <td>...</td>
+      <td>58</td>
+      <td>72</td>
+      <td>11</td>
+      <td>0</td>
+      <td>11</td>
+      <td>15</td>
+      <td>Top 100</td>
+      <td>Charted</td>
+      <td>Top 50</td>
+      <td>Charted</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>WHERE SHE GOES</td>
+      <td>Bad Bunny</td>
+      <td>1</td>
+      <td>2023</td>
+      <td>5</td>
+      <td>18</td>
+      <td>3133</td>
+      <td>50</td>
+      <td>303236322</td>
+      <td>84</td>
+      <td>...</td>
+      <td>23</td>
+      <td>80</td>
+      <td>14</td>
+      <td>63</td>
+      <td>11</td>
+      <td>6</td>
+      <td>Top 50</td>
+      <td>Top 200</td>
+      <td>Top 50</td>
+      <td>Charted</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 28 columns</p>
+</div>
+```
+```
+df.info()
+```
+```
+<class 'pandas.core.frame.DataFrame'>
+Index: 952 entries, 0 to 952
+Data columns (total 28 columns):
+ #   Column                      Non-Null Count  Dtype 
+---  ------                      --------------  ----- 
+ 0   track_name                  952 non-null    object
+ 1   artist(s)_name              952 non-null    object
+ 2   artist_count                952 non-null    int64 
+ 3   released_year               952 non-null    int64 
+ 4   released_month              952 non-null    int64 
+ 5   released_day                952 non-null    int64 
+ 6   in_spotify_playlists        952 non-null    int64 
+ 7   in_spotify_charts           952 non-null    int64 
+ 8   streams                     952 non-null    int64 
+ 9   in_apple_playlists          952 non-null    int64 
+ 10  in_apple_charts             952 non-null    int64 
+ 11  in_deezer_playlists         952 non-null    int64 
+ 12  in_deezer_charts            952 non-null    int64 
+ 13  in_shazam_charts            952 non-null    int64 
+ 14  bpm                         952 non-null    int64 
+ 15  key                         952 non-null    int64 
+ 16  mode                        952 non-null    object
+ 17  danceability_%              952 non-null    int64 
+ 18  valence_%                   952 non-null    int64 
+ 19  energy_%                    952 non-null    int64 
+ 20  acousticness_%              952 non-null    int64 
+ 21  instrumentalness_%          952 non-null    int64 
+ 22  liveness_%                  952 non-null    int64 
+ 23  speechiness_%               952 non-null    int64 
+ 24  in_spotify_charts_category  952 non-null    object
+ 25  in_apple_charts_category    952 non-null    object
+ 26  in_deezer_charts_category   952 non-null    object
+ 27  in_shazam_charts_category   952 non-null    object
+dtypes: int64(21), object(7)
+memory usage: 215.7+ KB
+```
+
+#### **3.2 Descriptive Statistics**
+
+```
+df.describe()
+```
+```
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>artist_count</th>
+      <th>released_year</th>
+      <th>released_month</th>
+      <th>released_day</th>
+      <th>in_spotify_playlists</th>
+      <th>in_spotify_charts</th>
+      <th>streams</th>
+      <th>in_apple_playlists</th>
+      <th>in_apple_charts</th>
+      <th>in_deezer_playlists</th>
+      <th>...</th>
+      <th>in_shazam_charts</th>
+      <th>bpm</th>
+      <th>key</th>
+      <th>danceability_%</th>
+      <th>valence_%</th>
+      <th>energy_%</th>
+      <th>acousticness_%</th>
+      <th>instrumentalness_%</th>
+      <th>liveness_%</th>
+      <th>speechiness_%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>9.520000e+02</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>...</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+      <td>952.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.556723</td>
+      <td>2018.288866</td>
+      <td>6.038866</td>
+      <td>13.944328</td>
+      <td>5202.565126</td>
+      <td>12.022059</td>
+      <td>5.141374e+08</td>
+      <td>67.866597</td>
+      <td>51.963235</td>
+      <td>385.535714</td>
+      <td>...</td>
+      <td>56.907563</td>
+      <td>122.553571</td>
+      <td>5.193277</td>
+      <td>66.984244</td>
+      <td>51.406513</td>
+      <td>64.274160</td>
+      <td>27.078782</td>
+      <td>1.582983</td>
+      <td>18.214286</td>
+      <td>10.138655</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.893331</td>
+      <td>11.011397</td>
+      <td>3.564571</td>
+      <td>9.197223</td>
+      <td>7901.400683</td>
+      <td>19.582405</td>
+      <td>5.668569e+08</td>
+      <td>86.470591</td>
+      <td>50.628850</td>
+      <td>1131.078760</td>
+      <td>...</td>
+      <td>157.513706</td>
+      <td>28.069601</td>
+      <td>3.701314</td>
+      <td>14.631282</td>
+      <td>23.480526</td>
+      <td>16.558517</td>
+      <td>26.001599</td>
+      <td>8.414064</td>
+      <td>13.718374</td>
+      <td>9.915399</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>1930.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>31.000000</td>
+      <td>0.000000</td>
+      <td>2.762000e+03</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>65.000000</td>
+      <td>-1.000000</td>
+      <td>23.000000</td>
+      <td>4.000000</td>
+      <td>9.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>3.000000</td>
+      <td>2.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>1.000000</td>
+      <td>2020.000000</td>
+      <td>3.000000</td>
+      <td>6.000000</td>
+      <td>874.500000</td>
+      <td>0.000000</td>
+      <td>1.416362e+08</td>
+      <td>13.000000</td>
+      <td>7.000000</td>
+      <td>13.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>99.750000</td>
+      <td>2.000000</td>
+      <td>57.000000</td>
+      <td>32.000000</td>
+      <td>53.000000</td>
+      <td>6.000000</td>
+      <td>0.000000</td>
+      <td>10.000000</td>
+      <td>4.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.000000</td>
+      <td>2022.000000</td>
+      <td>6.000000</td>
+      <td>13.000000</td>
+      <td>2216.500000</td>
+      <td>3.000000</td>
+      <td>2.905309e+08</td>
+      <td>34.000000</td>
+      <td>38.500000</td>
+      <td>44.000000</td>
+      <td>...</td>
+      <td>2.000000</td>
+      <td>121.000000</td>
+      <td>5.000000</td>
+      <td>69.000000</td>
+      <td>51.000000</td>
+      <td>66.000000</td>
+      <td>18.000000</td>
+      <td>0.000000</td>
+      <td>12.000000</td>
+      <td>6.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2.000000</td>
+      <td>2022.000000</td>
+      <td>9.000000</td>
+      <td>22.000000</td>
+      <td>5573.750000</td>
+      <td>16.000000</td>
+      <td>6.738690e+08</td>
+      <td>88.000000</td>
+      <td>87.000000</td>
+      <td>164.250000</td>
+      <td>...</td>
+      <td>33.250000</td>
+      <td>140.250000</td>
+      <td>8.000000</td>
+      <td>78.000000</td>
+      <td>70.000000</td>
+      <td>77.000000</td>
+      <td>43.000000</td>
+      <td>0.000000</td>
+      <td>24.000000</td>
+      <td>11.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>8.000000</td>
+      <td>2023.000000</td>
+      <td>12.000000</td>
+      <td>31.000000</td>
+      <td>52898.000000</td>
+      <td>147.000000</td>
+      <td>3.703895e+09</td>
+      <td>672.000000</td>
+      <td>275.000000</td>
+      <td>12367.000000</td>
+      <td>...</td>
+      <td>1451.000000</td>
+      <td>206.000000</td>
+      <td>11.000000</td>
+      <td>96.000000</td>
+      <td>97.000000</td>
+      <td>97.000000</td>
+      <td>97.000000</td>
+      <td>91.000000</td>
+      <td>97.000000</td>
+      <td>64.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 21 columns</p>
+</div>
+```
+**Observations:**
+
+Release Date
+
+- The year of release of the latest song in the dataset is (of course) **2023**, with the oldest dating back to **1930**.
+
+Popularity
+
+- Some of the most streamed songs never landed in the charts.
+- The most number of streams is **3,703,895,000**, while the least number of streams is **2,762**.
+- The mean number of streams is **514,137,400** with a standard deviation of **566,856,900**, which indicates that the number of streams varies by a huge value.
+
+Song Properties / Characteristics
+
+- The highest and lowest BPM is **206** and **65**, respectively, with a mean value of **122.55**.
+- The highest and lowest danceability is 96% and 23%, respectively, with a mean value of 66.98%.
+- The highest and lowest valence is 97% and 4%, respectively, with a mean value of 51.41%.
+- The highest and lowest energy is 97% and 9%, repectively, with a mean value of 64.27%.
+- The highest and lowest acousticness is 97% and 0%, respectively, with a mean value of 27.08%.
+- The highest and lowest instrumentalness is 91% and 0%, respectively, with a mean value of 1.58%.
+- The highest and lowest liveness is 97% and 3%, respectively, with a mean value of 18.21%.
+- The highest and lowest speechiness is 64% and 2%, respectively, with a mean value of 10.14%.
 
 
