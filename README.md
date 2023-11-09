@@ -1532,22 +1532,22 @@ platforms_playlist = ['Spotify','Apple','Deezer']
 platforms_playlist_comb = [(platforms_playlist[i], platforms_playlist[j]) for i in range(3) for j in range(i + 1, 3)]
 
 for i, (platform1, platform2) in enumerate(platforms_playlist_comb):
-    col1 = f'in_{platform1.lower()}_charts'
-    col2 = f'in_{platform2.lower()}_charts'
+    col1a = f'in_{platform1.lower()}_playlists'
+    col2a = f'in_{platform2.lower()}_playlists'
     
-    platform_corr = df[col1].corr(df[col2]) 
+    platform_corr = df[col1a].corr(df[col2a]) 
     
     print(f'Correlation between {platform1} and {platform2}: {platform_corr:.2f}')
 ```
 
 ![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/be51946d-b63f-47dc-864c-9c88779a0f86)
 
-- Correlation between Spotify and Apple: 0.55
-- Correlation between Spotify and Deezer: 0.60
-- Correlation between Apple and Deezer: 0.38
+- Correlation between Spotify and Apple: 0.71
+- Correlation between Spotify and Deezer: 0.83
+- Correlation between Apple and Deezer: 0.47
 
 - Majority of songs in the top streamed tracks that are present in Spotify playlists are also present in Apple and Deezer playlists.
-- The chart results is backed by a moderate correlation score for Spotify and Apple playlists (0.55) and Spotify and Deezer playlists (0.60).
+- The chart results is backed by a high correlation score for Spotify and Apple playlists (0.71) and Spotify and Deezer playlists (0.83).
 
 ### 4.6 Chart Performance based on Track Metrics
 
