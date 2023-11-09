@@ -355,7 +355,7 @@ df.head(10)
 ```
 df.info()
 ```
-<table>
+```
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 953 entries, 0 to 952
 Data columns (total 24 columns):
@@ -387,5 +387,122 @@ Data columns (total 24 columns):
  23  speechiness_%         953 non-null    int64 
 dtypes: int64(17), object(7)
 memory usage: 178.8+ KB
-</table>
+```
+```
+print(df.isnull().sum())
+```
+```
+track_name               0
+artist(s)_name           0
+artist_count             0
+released_year            0
+released_month           0
+released_day             0
+in_spotify_playlists     0
+in_spotify_charts        0
+streams                  0
+in_apple_playlists       0
+in_apple_charts          0
+in_deezer_playlists      0
+in_deezer_charts         0
+in_shazam_charts        50
+bpm                      0
+key                     95
+mode                     0
+danceability_%           0
+valence_%                0
+energy_%                 0
+acousticness_%           0
+instrumentalness_%       0
+liveness_%               0
+speechiness_%            0
+dtype: int64
+```
+#### **3.1 Checking of Values in the Dataset**
+
+#### 3.1.1 Null values
+
+- The dataset contains null values from the columns **`in_shazam_charts`** and **`key`**. For the null values in the **`in_shazam_charts`** column, it is possible that these songs have the most number of streams but did not hit the charts in Shazam. 
+- For the null values in the **`key`** column, based on [Spotify for Developers - Get Track's Audio Features](https://developer.spotify.com/documentation/web-api/reference/get-audio-features), the key of the song can be converted into **integers** using the standard [Pitch Class Notation](https://en.wikipedia.org/wiki/Pitch_class). The null values for the `key` column will have a value of **-1**.
+
+#### 3.1.2 Incorrect datatypes
+
+- The following columns have incorrect datatypes:
+  - streams
+  - in_deezer_playlists
+  - in_shazam_charts
+  
+  The datatype for these columns will be converted into **int64.**
+
+#### 3.1.3 Pitch Class Notation
+
+Pitch Class | Tonal Counterparts |
+-----|-----|
+0 |C  |
+1 |C# |
+2 |D  |
+3 |D# |
+4 |E  |
+5 |F  |
+6 |F# |
+7 |G  |
+8 |G# |
+9 |A  |
+10  |A# |
+11  |B  |
+
+#### 3.1.4 Additional Column
+
+- A new column will be created to classify a track's placement in the charts. There will four (4) additional columns with the following metrics for rating a track's placement:
+  - 0                 - Uncharted
+  - 1 - 10            - Top 10
+  - 11 - 50           - Top 50
+  - 51 - 100          - Top 100
+  - 101 - 200         - Top 200
+  - Greater than 200  - Charted
+```
+## Replace null values in 'in_shazam_charts' column into 0
+df['in_shazam_charts'].fillna(0, inplace=True)
+
+## Replace invalid data in the 'stream' column into null
+df['streams'] = df['streams'] = pd.to_numeric(df['streams'], errors='coerce')
+
+## Replace null values in 'key' column into 'none'
+df['key'] = df['key'].fillna(-1)
+```
+```
+## Drop the null value in the 'streams' column
+df = df.dropna(how='any')
+
+print(df.isnull().sum())
+```
+```
+track_name              0
+artist(s)_name          0
+artist_count            0
+released_year           0
+released_month          0
+released_day            0
+in_spotify_playlists    0
+in_spotify_charts       0
+streams                 0
+in_apple_playlists      0
+in_apple_charts         0
+in_deezer_playlists     0
+in_deezer_charts        0
+in_shazam_charts        0
+bpm                     0
+key                     0
+mode                    0
+danceability_%          0
+valence_%               0
+energy_%                0
+acousticness_%          0
+instrumentalness_%      0
+liveness_%              0
+speechiness_%           0
+dtype: int64
+```
+
+
 
