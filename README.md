@@ -752,7 +752,6 @@ memory usage: 215.7+ KB
 ```
 df.describe()
 ```
-```
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -991,7 +990,7 @@ df.describe()
 </table>
 <p>8 rows × 21 columns</p>
 </div>
-```
+
 **Observations:**
 
 Release Date
@@ -1014,5 +1013,196 @@ Song Properties / Characteristics
 - The highest and lowest instrumentalness is 91% and 0%, respectively, with a mean value of 1.58%.
 - The highest and lowest liveness is 97% and 3%, respectively, with a mean value of 18.21%.
 - The highest and lowest speechiness is 64% and 2%, respectively, with a mean value of 10.14%.
+
+### **4. Data Visualization**
+
+### 4.1 Most Streamed Songs
+
+```
+## Sort the data based on the number of streams in descending order
+df_sorted = df.sort_values(by='streams', ascending=False)
+
+top_10_streamed = df_sorted.head(10)
+```
+```
+## Create a bar chart to visualize the top 10 most streamed songs
+plt.subplots(1,1, figsize=(6,4))
+
+sns.barplot(data=top_10_streamed, x='streams', y='track_name')
+plt.xlabel('Streams (in billions)', fontsize=7)
+plt.ylabel('Track Name', fontsize=7)
+plt.xticks(rotation=45, fontsize=7)
+plt.yticks(fontsize=7)
+
+plt.show()
+```
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/1f07b392-7264-4aee-a8f7-2f9cace49917)
+
+### 4.2 Relationship between Stream Count and other Variables
+
+```
+## Create a dataset to only include columns with numeric variables
+df_int = df.select_dtypes(include='int64').copy()
+
+## Drop the 'released_month' and 'released_day' columns as we will only analyze the data based on 'released_year'
+df_int = df_int.drop(columns=['released_month','released_day'])
+
+df_int.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>artist_count</th>
+      <th>released_year</th>
+      <th>in_spotify_playlists</th>
+      <th>in_spotify_charts</th>
+      <th>streams</th>
+      <th>in_apple_playlists</th>
+      <th>in_apple_charts</th>
+      <th>in_deezer_playlists</th>
+      <th>in_deezer_charts</th>
+      <th>in_shazam_charts</th>
+      <th>bpm</th>
+      <th>key</th>
+      <th>danceability_%</th>
+      <th>valence_%</th>
+      <th>energy_%</th>
+      <th>acousticness_%</th>
+      <th>instrumentalness_%</th>
+      <th>liveness_%</th>
+      <th>speechiness_%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+      <td>2023</td>
+      <td>553</td>
+      <td>147</td>
+      <td>141381703</td>
+      <td>43</td>
+      <td>263</td>
+      <td>45</td>
+      <td>10</td>
+      <td>826</td>
+      <td>125</td>
+      <td>11</td>
+      <td>80</td>
+      <td>89</td>
+      <td>83</td>
+      <td>31</td>
+      <td>0</td>
+      <td>8</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2023</td>
+      <td>1474</td>
+      <td>48</td>
+      <td>133716286</td>
+      <td>48</td>
+      <td>126</td>
+      <td>58</td>
+      <td>14</td>
+      <td>382</td>
+      <td>92</td>
+      <td>1</td>
+      <td>71</td>
+      <td>61</td>
+      <td>74</td>
+      <td>7</td>
+      <td>0</td>
+      <td>10</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>2023</td>
+      <td>1397</td>
+      <td>113</td>
+      <td>140003974</td>
+      <td>94</td>
+      <td>207</td>
+      <td>91</td>
+      <td>14</td>
+      <td>949</td>
+      <td>138</td>
+      <td>5</td>
+      <td>51</td>
+      <td>32</td>
+      <td>53</td>
+      <td>17</td>
+      <td>0</td>
+      <td>31</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>2019</td>
+      <td>7858</td>
+      <td>100</td>
+      <td>800840817</td>
+      <td>116</td>
+      <td>207</td>
+      <td>125</td>
+      <td>12</td>
+      <td>548</td>
+      <td>170</td>
+      <td>9</td>
+      <td>55</td>
+      <td>58</td>
+      <td>72</td>
+      <td>11</td>
+      <td>0</td>
+      <td>11</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>2023</td>
+      <td>3133</td>
+      <td>50</td>
+      <td>303236322</td>
+      <td>84</td>
+      <td>133</td>
+      <td>87</td>
+      <td>15</td>
+      <td>425</td>
+      <td>144</td>
+      <td>9</td>
+      <td>65</td>
+      <td>23</td>
+      <td>80</td>
+      <td>14</td>
+      <td>63</td>
+      <td>11</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```
+## Plot a histogram to visualize the descriptive statistics of each variable
+plt.figure(figsize=(25,20))
+
+for i, col in enumerate(df_int.columns):
+    plt.subplot(5,4, i+1)
+    sns.histplot(data=df_int, x=col, bins=10, kde=True)
+    plt.tight_layout
+    
+plt.show()
+```
+
+![image](https://github.com/ryanlacsamana/2023_Most_Streamed_Spotify_Song_Analysis/assets/138304188/7b0deec3-67b8-4da1-9594-fb7dca61a4a7)
+
 
 
